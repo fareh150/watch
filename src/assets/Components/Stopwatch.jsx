@@ -7,22 +7,37 @@ const Stopwatch = () => {
 
     useEffect(() => {
         let interval = null;
-        //la forma de hacer un if sin else , solo se pone && 
-        timerOn ? (internal = setInterval(() => {
-            setTime((prevTime) => prevTime + 10);
-        }, 10))
-        :
-        (clearInterval(interval))
+        
+        if (timerOn) {
+          interval = setInterval(() => {
+            setTime((prevTime) => prevTime + 10)
+          }, 10);
+        } else {
+          clearInterval(interval);
+        }
+
         return () => clearInterval(interval);
-    }, [timerOn])
+    }, [timerOn]);
 
   return (
     <div className="stopwatch">
-        <h2>{time}</h2>
-        <button onClick={() => setTimerOn(true)}>Start</button>
-        <button onClick={() => setTimerOn(false)}>Stop</button>
-        <button onClick={() => setTimerOn(true)}>Resume</button>
-        <button onClick={() => setTime(0)}>Reset</button>
+        <h2>
+        <span>{("0" + Math.floor((time/ 60000)  % 60)).slice(-2)}:</span>
+        <span>{("0" + Math.floor((time/ 1000) % 60)).slice(-2)}:</span>
+        <span>{("0" + ((time/10) % 100)).slice(-2)}</span>
+        </h2>
+        <div className="buttons">
+          {!timerOn && time === 0 && (
+            <button onClick={() => setTimerOn(true)}>Start</button>
+          )}
+          {timerOn && <button onClick={() => setTimerOn(false)}>Stop</button>}
+          {!timerOn && time > 0 && (
+            <button onClick={() => setTime(0)}>Reset</button>
+          )}
+          {!timerOn && time > 0 && (
+            <button onClick={() => setTimerOn(true)}>Resume</button>
+          )}
+        </div>
     </div>
   )
 }
